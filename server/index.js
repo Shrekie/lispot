@@ -1,10 +1,7 @@
 const express = require('express');
-
 const Redis = require('ioredis');
-
 const session = require('express-session');
 const RedisStore = require('connect-redis')(session);
-
 const bodyParser = require('body-parser');
 
 const app = express();
@@ -23,6 +20,7 @@ app.use(session({
     secure: false,
     maxAge: 1000 * 60 * 60 * 48 // 2 days
   },
+  
   secret: 'keyboard cat',
   resave: false,
   saveUninitialized: false
