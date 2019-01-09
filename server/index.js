@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const Redis = require('ioredis');
 const session = require('express-session');
@@ -7,12 +8,12 @@ const bodyParser = require('body-parser');
 const app = express();
 app.set('trust proxy', true);
 
-const redis = new Redis(6379);
+const redis = new Redis(6379, process.env.REDIS_URL);
 
 app.use(session({
 
   store: new RedisStore({ 
-    host: 'localhost', port: 6379, 
+    host: process.env.REDIS_URL, port: 6379, 
     client: redis
   }),
   
@@ -30,14 +31,13 @@ app.use(session({
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-const router = express.Router();
+const authorization = require('./routes/authorization');
+app.use(authorization);
 
-router.get('/', (req, res) => {
-  res.json( {index: "iamjsonlol"} );
+app.get('/', function(req, res){
+  res.json(req.isAuthenticated());
 });
 
-app.use(router);
-
-app.listen('80', '0.0.0.0', () => {
+app.listen(process.env.PORT, '0.0.0.0', () => {
   console.log('Started on port 1.', "80");
 });

@@ -1,35 +1,36 @@
 const express = require('express');
+const Redis = require('ioredis');
 const router = express.Router();
 const passport = require('passport');
 const SpotifyStrategy = require('passport-spotify').Strategy;
+
+const redis = new Redis(6379, process.env.REDIS_URL);
 
 router.use(passport.initialize());
 router.use(passport.session());
 
 passport.use(
-
   new SpotifyStrategy({
 
-      clientID: client_id,
-      clientSecret: client_secret,
-      callbackURL: 'http://localhost:8888/auth/spotify/callback'
+      clientID: process.env.CLIENT_ID,
+      clientSecret: process.env.CLIENT_SECRET,
+      callbackURL: 'http://localhost:3000/auth/spotify/callback'
 
     },
 
-    function(accessToken, refreshToken, expires_in, profile, done) {
+    (accessToken, refreshToken, expires_in, profile, done) => {
 
       redis.set(profile.id, 
       {accessToken, refreshToken, expires_in, profile});
 
-      return done(err, profile);
+      return done(null, profile);
       
     }
 
   )
-  
 );
 
-passport.serializeUser(function(profile, done) {
+passport.serializeUser((profile, done) => {
   done(null, profile.id);
 });
 
@@ -41,16 +42,20 @@ passport.deserializeUser(function(id, done) {
   
 });
 
-app.get('/auth/spotify', passport.authenticate('spotify'), function(req, res) {
+router.get('/auth/spotify', passport.authenticate('spotify'), (req, res) => {
   // The request will be redirected to spotify for authentication, so this
   // function will not be called.
 });
 
-app.get(
-  '/auth/spotify/callback',
+router.get('/auth/spotify/callback',
+
   passport.authenticate('spotify', { failureRedirect: '/login' }),
-  function(req, res) {
+
+  (req, res) => {
     // Successful authentication, redirect home.
     res.redirect('/');
   }
+
 );
+
+module.exports = router;
