@@ -1,6 +1,6 @@
 const express = require('express');
-const redis = require('../modules/redis');
 const router = express.Router();
+const redis = require('../modules/redis');
 const passport = require('passport');
 const SpotifyStrategy = require('passport-spotify').Strategy;
 

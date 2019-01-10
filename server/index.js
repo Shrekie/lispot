@@ -1,9 +1,9 @@
 require('dotenv').config();
 const express = require('express');
+const redis = require('./modules/redis');
 const session = require('express-session');
 const RedisStore = require('connect-redis')(session);
 const bodyParser = require('body-parser');
-const redis = require('./modules/redis');
 
 const app = express();
 app.set('trust proxy', true);
