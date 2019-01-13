@@ -18,4 +18,4 @@ app:
     - NODE_ENV=development
     - PORT=3000
   command:
-    sh -c 'npm i && node server/index.js'
+    sh -c 'npm i && npm run build --prefix ./client'

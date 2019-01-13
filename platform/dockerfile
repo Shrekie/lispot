@@ -1,3 +1,2 @@
 FROM node:8.10
-
 WORKDIR '/var/www/app'

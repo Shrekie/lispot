@@ -1,4 +1,6 @@
-const VueLoaderPlugin = require('vue-loader/lib/plugin')
+const VueLoaderPlugin = require('vue-loader/lib/plugin');
+const NodemonPlugin = require('nodemon-webpack-plugin');
+const path = require('path');
 
 module.exports = {
 
@@ -33,7 +35,20 @@ module.exports = {
   },
 
   plugins: [
-    new VueLoaderPlugin()
+    
+    new VueLoaderPlugin(),
+
+    new NodemonPlugin({
+
+      script: '../server/index.js',
+
+      watch: [
+        path.resolve('./dist'), 
+        path.resolve('./../server')
+      ]
+
+    })
+
   ]
 
 }
