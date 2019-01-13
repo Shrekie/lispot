@@ -29,13 +29,13 @@ passport.use(
 );
 
 passport.serializeUser((profile, done) => {
-  done(null, profile.id);
+  return done(null, profile.id);
 });
 
 passport.deserializeUser((id, done) => {
 
   redis.get(id, function (err, result) {
-    done(err, result);
+    return done(err, result);
   });
   
 });
@@ -50,8 +50,12 @@ router.get('/auth/spotify/callback',
   passport.authenticate('spotify', { failureRedirect: '/login' }),
 
   (req, res) => {
-    // Successful authentication, redirect home.
-    res.redirect('/');
+
+    var redirectTo = req.session.redirectTo || '/';
+    delete req.session.redirectTo;
+    
+    res.redirect(redirectTo)
+
   }
 
 );
