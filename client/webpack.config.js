@@ -4,9 +4,12 @@ const path = require('path');
 
 module.exports = {
 
-  entry: [
-    './src/index.js'
-  ],
+  entry: './src/index.js',
+
+  output: {
+    path: path.resolve('./dist'),
+    filename: 'main.js',
+  },
 
   mode: 'development',
 
@@ -35,7 +38,7 @@ module.exports = {
   },
 
   plugins: [
-    
+
     new VueLoaderPlugin(),
 
     new NodemonPlugin({
