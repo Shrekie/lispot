@@ -7,7 +7,11 @@ const clientPath = __dirname + '/../../client';
 
 router.use('/dist', express.static(path.join(clientPath + '/dist')));
 
-router.get('/aroom', authenticated, function(req, res){
+router.get('/room/*', authenticated, function(req, res){
+  res.sendFile(path.join(clientPath + '/index.html'));
+});
+
+router.get('/', function(req, res){
   res.sendFile(path.join(clientPath + '/index.html'));
 });
 

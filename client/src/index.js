@@ -16,10 +16,11 @@ const routes = [
   },
 
   { 
-    path: '/Room', 
+    path: '/room/:roomId', 
     component: Room,
+    props: true
   }
-  
+
 ];
 
 const router = new VueRouter({
