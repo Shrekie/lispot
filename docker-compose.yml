@@ -13,9 +13,11 @@ app:
     - redis
   ports:
     - 3000:3000
+    - 4000:4000
   environment:
     - REDIS_URL=redis://cache
     - NODE_ENV=development
     - PORT=3000
+    - SOCKET_IO_PORT=4000
   command:
-    sh -c 'npm i && npm run build --prefix ./web_client'
+    sh -c 'npm i && npm run build --prefix ./web'

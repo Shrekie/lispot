@@ -1,4 +1,4 @@
 node_modules/
 .env
-web_client/dist
-web_client/etc
+web/dist
+web/etc

@@ -4,15 +4,21 @@ import VueRouter from 'vue-router';
 
 Vue.use(VueRouter);
 
-import App from './App.vue'
-import Room from './Room.vue'
-import Login from './Login.vue'
+import App from './components/App.vue'
+import Room from './components/Room.vue'
+import Login from './components/Login.vue'
+import Create from './components/Create.vue'
 
 const routes = [
 
   { 
     path: '', 
     component: Login,
+  },
+
+  { 
+    path: '/create', 
+    component: Create,
   },
 
   { 

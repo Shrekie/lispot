@@ -1,10 +1,10 @@
 const express = require('express');
 const router = express.Router();
-const lobby = require('../lispot_core/lobby');
+const room = require('../core/room');
 const { authenticated } = require('../middleware/guard');
 
-router.get('/book', authenticated('/createroom'), (req, res) => {
-  res.json(lobby.book());
+router.get('/book', authenticated('/create'), (req, res) => {
+  res.json(room.book());
 });
 
 module.exports = router;

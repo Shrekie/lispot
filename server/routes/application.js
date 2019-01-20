@@ -3,7 +3,7 @@ const router = express.Router();
 const history = require('connect-history-api-fallback');
 const path = require('path');
 
-const clientPath = __dirname + '/../../web_client';
+const clientPath = __dirname + '/../../web';
 
 router.use(history({
   verbose: true,
