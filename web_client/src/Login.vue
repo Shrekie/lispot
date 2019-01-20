@@ -6,7 +6,7 @@
     </div>
 
     <div class="centered-box">
-      <img class="minimal-logo" src="/dist/assets/lispot-logo.png">
+      <img class="minimal-logo" src="/assets/lispot-logo.png">
     </div>
 
   </div>

@@ -1,18 +1,16 @@
 const express = require('express');
 const router = express.Router();
+const history = require('connect-history-api-fallback');
 const path = require('path');
 const { authenticated } = require('../middleware/guard');
 
-const clientPath = __dirname + '/../../client';
+const clientPath = __dirname + '/../../web_client';
 
-router.use('/dist', express.static(path.join(clientPath + '/dist')));
+router.use(history({
+  verbose: true,
+}));
 
-router.get('/room/*', authenticated, function(req, res){
-  res.sendFile(path.join(clientPath + '/index.html'));
-});
-
-router.get('/', function(req, res){
-  res.sendFile(path.join(clientPath + '/index.html'));
-});
+router.use('/', express.static(path.join(clientPath + '/dist')));
+router.use('/', express.static(path.join(clientPath + '/templates')));
 
 module.exports = router;
