@@ -1,12 +1,16 @@
-var authenticated = function(req, res, next){
+var authenticated = (route) => { 
+  
+  return (req, res, next) => {
 
-  if (!req.isAuthenticated()) {
+    if (!req.isAuthenticated()) {
 
-    req.session.redirectTo = req.path;
-    res.redirect('/auth/spotify');
+      req.session.redirectTo = route;
+      res.redirect('/auth/spotify');
 
-  } else {
-    next();
+    } else {
+      next();
+    }
+
   }
 
 };
