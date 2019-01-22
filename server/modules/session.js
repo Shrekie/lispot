@@ -1,10 +1,8 @@
-const express = require('express');
-const router = express.Router();
 const redis = require('./redis');
 const session = require('express-session');
 const RedisStore = require('connect-redis')(session);
 
-router.use(session({
+const middleware = session({
 
   store: new RedisStore({ 
     host: process.env.REDIS_URL, port: 6379, 
@@ -20,6 +18,6 @@ router.use(session({
   resave: false,
   saveUninitialized: false
 
-}));
+});
 
-module.exports = router;
+module.exports = middleware;

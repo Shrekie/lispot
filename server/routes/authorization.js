@@ -51,10 +51,7 @@ router.get('/auth/spotify/callback',
 
   (req, res) => {
     
-    var redirectTo = req.session.redirectTo || '/';
-    delete req.session.redirectTo;
-    
-    res.redirect(redirectTo)
+    res.redirect("/login")
 
   }
 

@@ -19,7 +19,7 @@
 import logo from '../assets/lispot-logo.png';
 
 export default {
-
+  
 }
 </script>
 

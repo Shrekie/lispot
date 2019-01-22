@@ -5,9 +5,13 @@
 </template>
 
 <script>
-import caster from '../modules/caster';
+import tenant from '../modules/tenant';
 
 export default {
+
+  mounted: function () {
+    tenant.make();
+  }
 
 }
 </script>

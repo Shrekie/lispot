@@ -1,18 +1,16 @@
-var authenticated = (route) => { 
-  
-  return (req, res, next) => {
+var authenticated = (req, res, next) => {
 
-    if (!req.isAuthenticated()) {
+  if (!req.isAuthenticated()) {
 
-      req.session.redirectTo = route;
-      res.redirect('/auth/spotify');
+    console.log("👻 SECURITY IS CLIENT SIDE 👻");
 
-    } else {
-      next();
-    }
+    res.status(401);
+    res.json({ error: "Session no longer valid." });
 
+  } else {
+    next();
   }
 
-};
+}
 
 module.exports =  { authenticated };
