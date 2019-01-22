@@ -10,7 +10,13 @@ import tenant from '../modules/tenant';
 export default {
 
   mounted: function () {
-    tenant.make();
+
+    tenant.make().then( room => {
+      
+      this.$router.push({ path: `/room/${room}`});
+
+    });
+
   }
 
 }

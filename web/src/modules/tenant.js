@@ -5,12 +5,13 @@ const SpotifyConnect = { all: () => { return "allspotify" } };
 
 class Tenant {
 
-  constructor () {
+  constructor ( room ) {
 
-    this.room = Number;
+    this.room = room || Number;
 
     this.socket = io('http://0.0.0.0:4000');
     this._connection();
+    this._update();
 
   }
 
@@ -19,9 +20,9 @@ class Tenant {
    */
   make () {
 
-    refresher.alive().then( ( session ) => {
+    return refresher.alive().then( ( session ) => {
 
-      fetch('/book', { redirect: "error" })
+      return fetch('/book', { redirect: "error" })
       .catch( ( error ) => {
         throw new Error(error)
       }).then( ( response ) => {
@@ -30,13 +31,40 @@ class Tenant {
         throw new Error("JSON not parsed.");
       }).then( ( response ) => {
         
-        console.log(response.room);
         this.room = response.room;
-        this.socket.emit('join', { connection: { room: response.room } } );
+        this._join();
+
+        return this.room;
   
       });
 
     });
+
+  }
+
+  /*
+   * Joins room.
+   */
+  enter ( room ) {
+
+    if ( room != this.room ) {
+
+      this.room = room;
+
+      return refresher.alive().then( ( session ) => {
+
+        this._join();
+        return Promise.resolve();
+  
+      });
+
+    }
+
+  }
+
+  _join() {
+
+    this.socket.emit('join', { connection: { room: this.room } } );
 
   }
 
@@ -56,12 +84,23 @@ class Tenant {
 
         connection: {
           room: this.room,
-          reciever: data.reciever
+          reciever: data.reciever,
+          route: "update_full"
         },
 
         update: SpotifyConnect.all()
 
       });
+
+    });
+
+  }
+
+  _update () {
+
+    this.socket.on('update_full', ( data ) => {
+
+      console.log(data);
 
     });
 

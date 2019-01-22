@@ -47,6 +47,8 @@ class Room {
 
     socket.on(event, (data) => {
 
+      console.log(data);
+
       redis.exists(data.connection.room).then( exists => {
 
         if(exists)
@@ -64,7 +66,7 @@ class Room {
 
     this._registered('give_all_one', socket, (data) => {
 
-      io.to(data.connection.reciever).emit(data.connection.route, data.update);
+      this._io_socket.to(data.connection.reciever).emit(data.connection.route, data.update);
       
     });
 
