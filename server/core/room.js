@@ -64,11 +64,23 @@ class Room {
 
   _give (socket) {
 
-    this._registered('give_all_one', socket, (data) => {
+    this._registered('give_all_to_single', socket, (data) => {
 
-      this._io_socket.to(data.connection.reciever).emit(data.connection.route, data.update);
+      this._io_socket.to(data.connection.reciever)
+      .emit("update", data.update);
       
     });
+
+    /*
+
+    this._registered('give_one_to_multiple', socket, (data) => {
+
+      this._io_socket.to(data.connection.reciever)
+      .emit(data.connection.route, data.update);
+      
+    });
+
+    */
 
   }
 

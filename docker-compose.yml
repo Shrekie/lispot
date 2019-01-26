@@ -20,4 +20,4 @@ app:
     - PORT=3000
     - SOCKET_IO_PORT=4000
   command:
-    sh -c 'npm i && npm run build --prefix ./web'
+    sh -c 'npm i --prefix ./web && npm i --prefix ./server && npm run build --prefix ./web'

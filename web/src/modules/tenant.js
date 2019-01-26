@@ -1,7 +1,9 @@
 import io from 'socket.io-client';
 import refresher from "./refresher.js"
+import tracer from "./tracer.js";
 
-const SpotifyConnect = { all: () => { return "allspotify" } };
+const SpotifyConnect = 
+{ all: () => { return { route:"all", data:"hellobaby" } } };
 
 class Tenant {
 
@@ -80,15 +82,14 @@ class Tenant {
 
       console.log(data);
 
-      this.socket.emit("give_all_one", {
+      this.socket.emit("give_all_to_single", {
 
         connection: {
           room: this.room,
           reciever: data.reciever,
-          route: "update_full"
         },
 
-        update: SpotifyConnect.all()
+        update: SpotifyConnect.all(),
 
       });
 
@@ -98,8 +99,12 @@ class Tenant {
 
   _update () {
 
-    this.socket.on('update_full', ( data ) => {
+    this.socket.on('update', ( data ) => {
 
+      /*
+       * Gets data and specifies caliber. This object to be sent to
+       * spotifyconnect and fill client context.
+       */
       console.log(data);
 
     });
