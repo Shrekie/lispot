@@ -24,13 +24,11 @@ class Tenant {
 
     return refresher.alive().then( ( session ) => {
 
-      return fetch('/book', { redirect: "error" })
+      return fetch('/book')
       .catch( ( error ) => {
         throw new Error(error)
       }).then( ( response ) => {
         return response.json();
-      }).catch( () => {
-        throw new Error("JSON not parsed.");
       }).then( ( response ) => {
         
         this.room = response.room;
@@ -78,9 +76,15 @@ class Tenant {
 
     });
 
-    this.socket.on('connection_new', ( data ) => {
+
+    this.socket.on('connection_success', (data) => {
 
       console.log(data);
+      tracer.enable();
+
+    });
+
+    this.socket.on('connection_new', ( data ) => {
 
       this.socket.emit("give_all_to_single", {
 

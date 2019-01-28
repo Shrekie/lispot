@@ -1,5 +1,4 @@
 const express = require('express');
-const session = require('../modules/session');
 const redis = require('../modules/redis');
 const { authenticated } = require('../middleware/guard');
 const uuidv1 = require('uuid/v1');
@@ -15,12 +14,6 @@ class Room {
   }
 
   _routes () {
-
-    this._io_socket.use(function(socket, next){
-      
-      session(socket.request, socket.request.res, next);
-
-    });
 
     this._io_socket.on("connection", (socket) => {
 
@@ -91,6 +84,8 @@ class Room {
       socket.join(data.connection.room);
       socket.broadcast.to(data.connection.room)
         .emit( "connection_new" , { reciever: socket.id } );
+
+      socket.emit('connection_success', data.connection.room);
 
     })
 

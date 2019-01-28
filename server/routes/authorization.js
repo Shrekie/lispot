@@ -3,6 +3,7 @@ const router = express.Router();
 const redis = require('../modules/redis');
 const passport = require('passport');
 const SpotifyStrategy = require('passport-spotify').Strategy;
+const { authenticated } = require('../middleware/guard');
 
 router.use(passport.initialize());
 router.use(passport.session());
@@ -18,8 +19,10 @@ passport.use(
 
     (accessToken, refreshToken, expires_in, profile, done) => {
 
-      redis.set(profile.id, 
-      JSON.stringify({accessToken, refreshToken, expires_in, profile}));
+      let expires = Math.round(new Date().getTime() / 1000) + (expires_in-60);
+      
+      redis.set(profile.id, JSON.stringify({accessToken, 
+      refreshToken, expires, profile}));
 
       return done(null, profile);
       
@@ -41,7 +44,17 @@ passport.deserializeUser((id, done) => {
 });
 
 // Create session token
-router.get('/auth/spotify', passport.authenticate('spotify'), (req, res) => {
+router.get('/auth/spotify', passport.authenticate('spotify', {
+  scope: ["streaming", "user-read-birthdate", "user-read-email", "user-read-private"]
+}), (req, res) => {
+});
+
+// Get token
+router.get('/user', authenticated, (req, res) => {
+
+  res.status(200);
+  res.json(req.user);
+  // #TODO: auto refresh token
 
 });
 

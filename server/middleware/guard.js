@@ -2,7 +2,7 @@ var authenticated = (req, res, next) => {
 
   if (!req.isAuthenticated()) {
 
-    console.log("👻 SECURITY IS CLIENT SIDE 👻");
+    console.log("👻 SESSION NOT VALID 👻");
 
     res.status(401);
     res.json({ error: "Session no longer valid." });
