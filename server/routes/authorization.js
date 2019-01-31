@@ -45,7 +45,8 @@ passport.deserializeUser((id, done) => {
 
 // Create session token
 router.get('/auth/spotify', passport.authenticate('spotify', {
-  scope: ["streaming", "user-read-birthdate", "user-read-email", "user-read-private"]
+  scope: ["streaming", "user-read-birthdate", "user-read-email",
+   "user-read-private", "user-read-currently-playing", "user-modify-playback-state"]
 }), (req, res) => {
 });
 

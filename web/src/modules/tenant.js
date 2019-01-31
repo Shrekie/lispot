@@ -2,12 +2,12 @@ import io from 'socket.io-client';
 import refresher from "./refresher.js"
 import tracer from "./tracer.js";
 
-const SpotifyConnect = 
-{ all: () => { return { route:"all", data:"hellobaby" } } };
+const SpotifyConnect =
+  { all: () => { return { route: "all", data: "hellobaby" } } };
 
 class Tenant {
 
-  constructor ( room ) {
+  constructor(room) {
 
     this.room = room || Number;
 
@@ -20,23 +20,23 @@ class Tenant {
   /*
    * Creates new room and joins it.
    */
-  make () {
+  make() {
 
-    return refresher.alive().then( ( session ) => {
+    return refresher.alive().then(token => {
 
       return fetch('/book')
-      .catch( ( error ) => {
-        throw new Error(error)
-      }).then( ( response ) => {
-        return response.json();
-      }).then( ( response ) => {
-        
-        this.room = response.room;
-        this._join();
+        .catch((error) => {
+          throw new Error(error)
+        }).then((response) => {
+          return response.json();
+        }).then((response) => {
 
-        return this.room;
-  
-      });
+          this.room = response.room;
+          this._join();
+
+          return this.room;
+
+        });
 
     });
 
@@ -45,17 +45,17 @@ class Tenant {
   /*
    * Joins room.
    */
-  enter ( room ) {
+  enter(room) {
 
-    if ( room != this.room ) {
+    if (room != this.room) {
 
       this.room = room;
 
-      return refresher.alive().then( ( session ) => {
+      return refresher.alive().then(token => {
 
         this._join();
         return Promise.resolve();
-  
+
       });
 
     }
@@ -64,11 +64,11 @@ class Tenant {
 
   _join() {
 
-    this.socket.emit('join', { connection: { room: this.room } } );
+    this.socket.emit('join', { connection: { room: this.room } });
 
   }
 
-  _connection () {
+  _connection() {
 
     this.socket.on('connection_error', (data) => {
 
@@ -84,7 +84,7 @@ class Tenant {
 
     });
 
-    this.socket.on('connection_new', ( data ) => {
+    this.socket.on('connection_new', (data) => {
 
       this.socket.emit("give_all_to_single", {
 
@@ -101,9 +101,9 @@ class Tenant {
 
   }
 
-  _update () {
+  _update() {
 
-    this.socket.on('update', ( data ) => {
+    this.socket.on('update', (data) => {
 
       /*
        * Gets data and specifies caliber. This object to be sent to

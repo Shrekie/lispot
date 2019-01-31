@@ -13,7 +13,7 @@ class Room {
 
   }
 
-  _routes () {
+  _routes() {
 
     this._io_socket.on("connection", (socket) => {
 
@@ -21,7 +21,7 @@ class Room {
       this._give(socket);
 
     });
-    
+
     this._io_socket.on("disconnect", (socket) => {
 
       console.log("lame");
@@ -36,15 +36,15 @@ class Room {
 
   }
 
-  _registered (event, socket, cb) {
+  _registered(event, socket, cb) {
 
     socket.on(event, (data) => {
 
       console.log(data);
 
-      redis.exists(data.connection.room).then( exists => {
+      redis.exists(data.connection.room).then(exists => {
 
-        if(exists)
+        if (exists)
           cb(data);
         else
           socket.emit('connection_error', "authentication error");
@@ -55,13 +55,13 @@ class Room {
 
   }
 
-  _give (socket) {
+  _give(socket) {
 
     this._registered('give_all_to_single', socket, (data) => {
 
       this._io_socket.to(data.connection.reciever)
-      .emit("update", data.update);
-      
+        .emit("update", data.update);
+
     });
 
     /*
@@ -77,13 +77,13 @@ class Room {
 
   }
 
-  _join (socket) {
+  _join(socket) {
 
     this._registered('join', socket, (data) => {
 
       socket.join(data.connection.room);
       socket.broadcast.to(data.connection.room)
-        .emit( "connection_new" , { reciever: socket.id } );
+        .emit("connection_new", { reciever: socket.id });
 
       socket.emit('connection_success', data.connection.room);
 
@@ -91,14 +91,15 @@ class Room {
 
   }
 
-  _empty (name) {
-    
+  _empty(name) {
+
+    console.log(this._io_socket.sockets.adapter.rooms);
     let room = this._io_socket.sockets.adapter.rooms[name];
     return room.length > 0;
 
   }
 
-  _open (name, minutes) {
+  _open(name, minutes) {
 
     setTimeout(() => {
 
@@ -108,7 +109,7 @@ class Room {
 
   }
 
-  _book () {
+  _book() {
 
     let room = uuidv1();
     redis.set(room, "1");
