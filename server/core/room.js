@@ -96,10 +96,9 @@ class Room {
     try {
       this._io_socket.sockets.adapter.rooms[name];
       return false;
-    } catch {
+    } catch(err) {
       return true
     }
-
 
   }
 
