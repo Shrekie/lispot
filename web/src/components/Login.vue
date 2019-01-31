@@ -1,32 +1,25 @@
 <template>
   <div>
-
     <router-link to="/create" tag="div" class="top-text">
-
       <div class="centered-logo">
-          <img class="minimal-logo" src="/assets/lispot-logo.png">
+        <img class="minimal-logo" src="/assets/lispot-logo.png">
       </div>
 
       <div class="app-name">Lispot</div>
       <div>Spotify, together</div>
-
     </router-link>
-
   </div>
 </template>
 
 <script>
-import logo from '../assets/lispot-logo.png';
+import logo from "../assets/lispot-logo.png";
 
-export default {
-  
-}
+export default {};
 </script>
 
 <style>
-
-.top-text{
-  background: #1E1E1E;
+.top-text {
+  background: #1e1e1e;
   color: white;
   margin: auto;
   padding: 15px 15px;
@@ -43,12 +36,11 @@ export default {
   margin-bottom: 15px;
   font-size: 25px;
 }
-.centered-logo{
+.centered-logo {
   width: 100px;
   margin: 0px auto 5px auto;
 }
 .minimal-logo {
   width: 100%;
 }
-
 </style>

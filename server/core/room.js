@@ -93,9 +93,13 @@ class Room {
 
   _empty(name) {
 
-    console.log(this._io_socket.sockets.adapter.rooms);
-    let room = this._io_socket.sockets.adapter.rooms[name];
-    return room.length > 0;
+    try {
+      this._io_socket.sockets.adapter.rooms[name];
+      return false;
+    } catch {
+      return true
+    }
+
 
   }
 

@@ -43,7 +43,7 @@ class Tracer {
       player.addListener('ready', ({ device_id }) => {
         console.log('Ready with Device ID', device_id);
         this._deviceID = device_id;
-        this._playSong();
+        //this._playSong();
       });
 
       // Not Ready
@@ -64,7 +64,7 @@ class Tracer {
       fetch("https://api.spotify.com/v1/me/player/play?device_id=" + this._deviceID, {
         method: "PUT", // *GET, POST, PUT, DELETE, etc.
         headers: {
-          "Accept":"application/json",
+          "Accept": "application/json",
           "Content-Type": "application/json",
           "Authorization": 'Bearer ' + token
         },
