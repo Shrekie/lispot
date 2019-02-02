@@ -1,0 +1,3 @@
+/*
+    Handles client context representation
+*/

@@ -5,13 +5,9 @@ class Tracer {
   constructor() {
 
     this._player = new Promise((resolve, reject) => {
-
       window.onSpotifyWebPlaybackSDKReady = () => {
-
         resolve();
-
       };
-
     });
 
     this._deviceID = String;
@@ -57,21 +53,38 @@ class Tracer {
 
   }
 
-  _playSong() {
+  play(songUri) {
 
-    refresher.alive().then(token => {
-      console.log(token);
-      fetch("https://api.spotify.com/v1/me/player/play?device_id=" + this._deviceID, {
-        method: "PUT", // *GET, POST, PUT, DELETE, etc.
+    return refresher.alive().then(token => {
+
+      return fetch("https://api.spotify.com/v1/me/player/play?device_id=" + this._deviceID, {
+        method: "PUT",
         headers: {
           "Accept": "application/json",
           "Content-Type": "application/json",
           "Authorization": 'Bearer ' + token
         },
-        body: JSON.stringify({ 'uris': ['spotify:track:0uryR2h5CovP64xlud4DGZ'] }), // body data type must match "Content-Type" header
-      }).then(response => console.log(response)); // parses response to JSON  
+        body: JSON.stringify({ 'uris': [songUri] }),
+      }).then(response => console.log(response));
 
-    })
+    });
+
+  }
+
+  currently() {
+
+    return refresher.alive().then(token => {
+
+      return fetch("https://api.spotify.com/v1/me/player", {
+        method: "GET",
+        headers: {
+          "Accept": "application/json",
+          "Content-Type": "application/json",
+          "Authorization": 'Bearer ' + token
+        }
+      }).then(response => { return response.json() });
+
+    });
 
   }
 

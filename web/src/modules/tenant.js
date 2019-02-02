@@ -2,9 +2,6 @@ import io from 'socket.io-client';
 import refresher from "./refresher.js"
 import tracer from "./tracer.js";
 
-const SpotifyConnect =
-  { all: () => { return { route: "all", data: "hellobaby" } } };
-
 class Tenant {
 
   constructor(room) {
@@ -64,7 +61,11 @@ class Tenant {
 
   _join() {
 
-    this.socket.emit('join', { connection: { room: this.room } });
+    this.socket.emit('join', {
+      connection: {
+        room: this.room
+      }
+    });
 
   }
 
@@ -79,21 +80,34 @@ class Tenant {
 
     this.socket.on('connection_success', (data) => {
 
-      console.log(data);
       tracer.enable();
 
     });
 
     this.socket.on('connection_new', (data) => {
 
-      this.socket.emit("give_all_to_single", {
+      this._giveContext();
+
+    });
+
+  }
+
+  _giveContext() {
+
+    tracer.currently().then(context => {
+
+      this.socket.emit("give_to_single", {
 
         connection: {
           room: this.room,
           reciever: data.reciever,
         },
 
-        update: SpotifyConnect.all(),
+        update: {
+          caliber: "create_context",
+          song: context.item.uri,
+          client: socket.id
+        },
 
       });
 
@@ -105,11 +119,7 @@ class Tenant {
 
     this.socket.on('update', (data) => {
 
-      /*
-       * Gets data and specifies caliber. This object to be sent to
-       * spotifyconnect and fill client context.
-       */
-      console.log(data);
+      tracer.play(data.song);
 
     });
 

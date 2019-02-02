@@ -57,7 +57,7 @@ class Room {
 
   _give(socket) {
 
-    this._registered('give_all_to_single', socket, (data) => {
+    this._registered('give_to_single', socket, (data) => {
 
       this._io_socket.to(data.connection.reciever)
         .emit("update", data.update);
@@ -97,6 +97,7 @@ class Room {
       this._io_socket.sockets.adapter.rooms[name];
       return false;
     } catch(err) {
+      console.log("deleted room in weird way");
       return true
     }
 
