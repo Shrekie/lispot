@@ -52,6 +52,11 @@ class Context {
       Math.abs(Math.floor(Math.random() * x) ^ Date.now()).toString(36);
   }
 
+  addUser() {
+    // ADD USER
+    console.log("have not made this yet");
+  }
+
   getListener() {
     return this._state.listener;
   }

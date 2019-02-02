@@ -1,6 +1,8 @@
 const express = require('express');
 const redis = require('../modules/redis');
-const { authenticated } = require('../middleware/guard');
+const {
+  authenticated
+} = require('../middleware/guard');
 const uuidv1 = require('uuid/v1');
 
 class Room {
@@ -57,10 +59,10 @@ class Room {
 
   _give(socket) {
 
-    this._registered('give_to_single', socket, (data) => {
+    this._registered('emit_from', socket, (data) => {
 
-      this._io_socket.to(data.connection.reciever)
-        .emit("update", data.update);
+      this._io_socket.to(data.connection.room)
+        .emit("update", data);
 
     });
 
@@ -82,8 +84,11 @@ class Room {
     this._registered('join', socket, (data) => {
 
       socket.join(data.connection.room);
+
       socket.broadcast.to(data.connection.room)
-        .emit("connection_new", { reciever: socket.id });
+        .emit("connection_new", {
+          reciever: data.connection.reciever
+        });
 
       socket.emit('connection_success', data.connection.room);
 
@@ -96,7 +101,7 @@ class Room {
     try {
       this._io_socket.sockets.adapter.rooms[name];
       return false;
-    } catch(err) {
+    } catch (err) {
       console.log("deleted room in weird way");
       return true
     }
@@ -119,7 +124,9 @@ class Room {
     redis.set(room, "1");
     this._open(room, 5);
 
-    return { room };
+    return {
+      room
+    };
 
   }
 

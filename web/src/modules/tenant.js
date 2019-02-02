@@ -1,6 +1,7 @@
 import io from 'socket.io-client';
 import refresher from "./refresher.js"
 import tracer from "./tracer.js";
+import context from "./context.js";
 
 class Tenant {
 
@@ -61,14 +62,22 @@ class Tenant {
 
   _join() {
 
-    this.socket.emit('join', {
-      connection: {
-        room: this.room,
-        /* 
-          #TODO: My UEID in this room rather than straight to socket id.
-          And then filter to that EUID if action needed on it.
-        */
-      }
+    tracer.currently().then(context => {
+
+      this.socket.emit("join", {
+
+        connection: {
+          room: this.room,
+          reciever: context.getListener().id,
+        },
+
+        update: {
+          song: context.item.uri,
+          client: socket.id
+        },
+
+      });
+
     });
 
   }
@@ -81,7 +90,6 @@ class Tenant {
 
     });
 
-
     this.socket.on('connection_success', (data) => {
 
       tracer.enable();
@@ -90,25 +98,26 @@ class Tenant {
 
     this.socket.on('connection_new', (data) => {
 
-      this._giveContext();
+      context.addUser(data);
+      this._giveContext(data);
 
     });
 
   }
 
-  _giveContext() {
+  _giveContext(data) {
 
     tracer.currently().then(context => {
 
-      this.socket.emit("give_to_single", {
+      this.socket.emit("emit_from", {
 
         connection: {
           room: this.room,
           reciever: data.reciever,
+          route: "create_context"
         },
 
         update: {
-          caliber: "create_context",
           song: context.item.uri,
           client: socket.id
         },
@@ -123,9 +132,21 @@ class Tenant {
 
     this.socket.on('update', (data) => {
 
-      tracer.play(data.song);
+      (this[data.connection.route] || (() => {
+        alert("ROUTE DOES NOT EXIST");
+      }))(data);
+
+      //tracer.play(data.song);
 
     });
+
+  }
+
+  create_context(data) {
+
+    if (data.connection.reciever == context.getListener().id) {
+      context.addUser(data);
+    }
 
   }
 
