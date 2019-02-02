@@ -63,7 +63,11 @@ class Tenant {
 
     this.socket.emit('join', {
       connection: {
-        room: this.room
+        room: this.room,
+        /* 
+          #TODO: My UEID in this room rather than straight to socket id.
+          And then filter to that EUID if action needed on it.
+        */
       }
     });
 
