@@ -60,10 +60,34 @@ class Tenant {
 
   }
 
+  /*
+   * Change has happened at tracer level, emit _device_change
+   * and change listener client context.
+   */
+  change(data) {
+
+    context.listenerChanged(data.track_window.current_track.name);
+
+    this.socket.emit("emit_from", {
+
+      connection: {
+        room: this.room,
+        reciever: context.getListener().id,
+        route: "_device_change"
+      },
+
+      update: {
+        song: data.track_window.current_track.uri,
+      },
+
+    });
+
+  }
+
   _join() {
 
-    tracer.currently().then(context => {
-
+    tracer.currently().then(playing => {
+      
       this.socket.emit("join", {
 
         connection: {
@@ -72,8 +96,8 @@ class Tenant {
         },
 
         update: {
-          song: context.item.uri,
-          client: socket.id
+          song: playing.item.uri,
+          client: playing.id
         },
 
       });
@@ -107,19 +131,18 @@ class Tenant {
 
   _giveContext(data) {
 
-    tracer.currently().then(context => {
+    tracer.currently().then(playing => {
 
       this.socket.emit("emit_from", {
 
         connection: {
           room: this.room,
           reciever: data.reciever,
-          route: "create_context"
+          route: "_create_context"
         },
 
         update: {
-          song: context.item.uri,
-          client: socket.id
+          song: playing.item.uri,
         },
 
       });
@@ -142,12 +165,22 @@ class Tenant {
 
   }
 
-  create_context(data) {
+  /*************************************************************
+  **** _SOCKET_ROUTES_ *****************************************
+  **************************************************************/
+
+  // New client has succesfully connected, create the context for this node.
+  _create_context(data) {
 
     if (data.connection.reciever == context.getListener().id) {
       context.addUser(data);
     }
 
+  }
+
+  // Lispot device changed has triggered for a client, sync the changes.
+  _device_change(data) {
+    console.log("SONG HAPPENING")
   }
 
 }

@@ -42,8 +42,6 @@ class Room {
 
     socket.on(event, (data) => {
 
-      console.log(data);
-
       redis.exists(data.connection.room).then(exists => {
 
         if (exists)

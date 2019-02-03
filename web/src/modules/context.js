@@ -14,21 +14,16 @@ class Context {
 
       listener: {
         id: this._generateUEID(),
-        name: String,
-        song: String,
+        name: "Thomas",
+        song: "songname",
         connected: Boolean
       }
 
     };
 
     this._vm = new Vue({
-      data: {
-        users: this._state.users,
-        listener: this._state.listener
-      }
+      data: { state: this._state }
     });
-
-    //Vue.set({}, this._vm, this._state); <-- (. we probably dont need this .)
 
   }
 
@@ -46,10 +41,10 @@ class Context {
 
   }
 
-  _generateUEID() {
-    let x = 2147483648;
-    return Math.floor(Math.random() * x).toString(36) +
-      Math.abs(Math.floor(Math.random() * x) ^ Date.now()).toString(36);
+  listenerChanged(song) {
+    console.log(song);
+    this._state.listener.song = song;
+    Vue.set(this._vm, 'state', this._state);
   }
 
   addUser() {
@@ -58,11 +53,17 @@ class Context {
   }
 
   getListener() {
-    return this._state.listener;
+    return this._vm.state.listener;
   }
 
   getUsers() {
-    return this._state.users;
+    return this._vm.state.users;
+  }
+
+  _generateUEID() {
+    let x = 2147483648;
+    return Math.floor(Math.random() * x).toString(36) +
+      Math.abs(Math.floor(Math.random() * x) ^ Date.now()).toString(36);
   }
 
 }

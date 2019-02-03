@@ -1,4 +1,5 @@
 import refresher from "./refresher.js";
+import tenant from "./tenant.js";
 
 class Tracer {
 
@@ -17,7 +18,7 @@ class Tracer {
   enable() {
 
     // #SUGGESTION: promise probably covered by robustness or something
-    this._player.then(() => {
+    return this._player.then(() => {
 
       var player = new Spotify.Player({
 
@@ -33,7 +34,10 @@ class Tracer {
       player.addListener('playback_error', ({ message }) => { console.error(message); });
 
       // Playback status updates
-      player.addListener('player_state_changed', state => { console.log(state); });
+      player.addListener('player_state_changed', state => {
+        console.log(state);
+        tenant.change(state);
+      });
 
       // Ready
       player.addListener('ready', ({ device_id }) => {
