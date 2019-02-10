@@ -86,21 +86,12 @@ class Tenant {
 
   _join() {
 
-    tracer.currently().then(playing => {
-      
-      this.socket.emit("join", {
+    this.socket.emit("join", {
 
-        connection: {
-          room: this.room,
-          reciever: context.getListener().id,
-        },
-
-        update: {
-          song: playing.item.uri,
-          client: playing.id
-        },
-
-      });
+      connection: {
+        room: this.room,
+        reciever: context.getListener().id,
+      }
 
     });
 
@@ -120,6 +111,7 @@ class Tenant {
 
     });
 
+    // New client has connected, make them add your context with _create_context.
     this.socket.on('connection_new', (data) => {
 
       context.addUser(data);
@@ -166,8 +158,8 @@ class Tenant {
   }
 
   /*************************************************************
-  **** _SOCKET_ROUTES_ *****************************************
-  **************************************************************/
+   **** _SOCKET_ROUTES_ *****************************************
+   **************************************************************/
 
   // New client has succesfully connected, create the context for this node.
   _create_context(data) {

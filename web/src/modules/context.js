@@ -16,13 +16,15 @@ class Context {
         id: this._generateUEID(),
         name: "Thomas",
         song: "songname",
-        connected: Boolean
+        connected: "USER_UEID"
       }
 
     };
 
     this._vm = new Vue({
-      data: { state: this._state }
+      data: {
+        state: this._state
+      }
     });
 
   }
@@ -36,8 +38,6 @@ class Context {
       } else user.selected = false;
 
     });
-
-    //Vue.set(this._vm, 'users', this._state.users); <-- (. we probably dont need this .)
 
   }
 
