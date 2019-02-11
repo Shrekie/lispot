@@ -77,7 +77,12 @@ class Tenant {
       },
 
       update: {
-        song: data.track_window.current_track.uri,
+
+        song: {
+          name: data.track_window.current_track.name,
+          uri: data.track_window.current_track.uri,
+        }
+
       },
 
     });
@@ -111,10 +116,12 @@ class Tenant {
 
     });
 
-    // New client has connected, make them add your context with _create_context.
+    /* 
+      New client has connected, make them add your context with _create_context.
+      Bind the representation with _bind_context.
+    */
     this.socket.on('connection_new', (data) => {
 
-      context.addUser(data);
       this._giveContext(data);
 
     });
@@ -123,21 +130,27 @@ class Tenant {
 
   _giveContext(data) {
 
-    tracer.currently().then(playing => {
+    this.socket.emit("emit_from", {
 
-      this.socket.emit("emit_from", {
+      connection: {
+        room: this.room,
+        reciever: data.reciever,
+        route: "_create_context"
+      }
 
-        connection: {
-          room: this.room,
-          reciever: data.reciever,
-          route: "_create_context"
-        },
+    });
 
-        update: {
-          song: playing.item.uri,
-        },
+  }
 
-      });
+  _connectedContext(data) {
+
+    this.socket.emit("emit_from", {
+
+      connection: {
+        room: this.room,
+        reciever: context.getListener().id,
+        route: "_bind_context"
+      }
 
     });
 
@@ -147,9 +160,9 @@ class Tenant {
 
     this.socket.on('update', (data) => {
 
-      (this[data.connection.route] || (() => {
+      (this[data.connection.route].bind(this) || (() => {
         alert("ROUTE DOES NOT EXIST");
-      }))(data);
+      }))(data)
 
       //tracer.play(data.song);
 
@@ -164,15 +177,27 @@ class Tenant {
   // New client has succesfully connected, create the context for this node.
   _create_context(data) {
 
-    if (data.connection.reciever == context.getListener().id) {
-      context.addUser(data);
+    if (data.connection.reciever != context.getListener().id) {
+      context.addUser(data.connection.reciever);
+      this._connectedContext();
     }
 
   }
 
+  _bind_context(data) {
+    if (data.connection.reciever != context.getListener().id) {
+      context.addUser(data.connection.reciever);
+    }
+  }
+
   // Lispot device changed has triggered for a client, sync the changes.
   _device_change(data) {
-    console.log("SONG HAPPENING")
+
+    context.userChanged({
+      id: data.connection.reciever,
+      song: data.update.song
+    })
+
   }
 
 }

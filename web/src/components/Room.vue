@@ -1,8 +1,14 @@
 <template>
   <div>
     <span class="room-number">{{this.name}}</span>
-    <div class="listener-container">
-      <span class="listener-stat">spotify name</span>
+    <div class="clients-container">
+      <div class="user-circle" v-for="item in clients" :key="item.id">
+        <span class="listener-stat">{{item.id}}</span>
+        <span class="listener-stat">{{item.song.name}}</span>
+      </div>
+    </div>
+    <div class="user-circle">
+      <span class="listener-stat">{{listener.id}}</span>
       <span class="listener-stat">{{listener.song}}</span>
     </div>
   </div>
@@ -21,6 +27,9 @@ export default {
   computed: {
     listener() {
       return context.getListener();
+    },
+    clients() {
+      return context.getUsers();
     }
   }
 };
@@ -33,7 +42,7 @@ export default {
   text-align: center;
 }
 
-.listener-container {
+.user-circle {
   border: 1px solid;
   padding: 5%;
   width: 100px;
@@ -41,6 +50,10 @@ export default {
   border-radius: 50%;
   background: gray;
   margin: 10px auto;
+}
+
+.clients-container {
+  flex-direction: row;
 }
 
 .room-number {

@@ -10,13 +10,11 @@ class Context {
 
     this._state = {
 
-      users: Array,
+      users: [],
 
       listener: {
         id: this._generateUEID(),
-        name: "Thomas",
-        song: "songname",
-        connected: "USER_UEID"
+        song: "",
       }
 
     };
@@ -42,14 +40,25 @@ class Context {
   }
 
   listenerChanged(song) {
-    console.log(song);
     this._state.listener.song = song;
-    Vue.set(this._vm, 'state', this._state);
   }
 
-  addUser() {
-    // ADD USER
-    console.log("have not made this yet");
+  userChanged(change) {
+
+    this._state.users = this._state.users.map(user => {
+      if (user.id == change.id) user.song = change.song;
+      return user;
+    });
+
+  }
+
+  addUser(id) {
+
+    this._state.users.push({
+      id: id,
+      song: ""
+    });
+
   }
 
   getListener() {
