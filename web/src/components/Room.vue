@@ -53,6 +53,7 @@ export default {
 }
 
 .clients-container {
+  flex: 1;
   flex-direction: row;
 }
 

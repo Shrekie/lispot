@@ -52,6 +52,10 @@ class Context {
 
   }
 
+  getUser(id) {
+    return this._state.users.filter(user => user.id == id)
+  }
+
   addUser(id) {
 
     this._state.users.push({

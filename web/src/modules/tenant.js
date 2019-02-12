@@ -177,16 +177,22 @@ class Tenant {
   // New client has succesfully connected, create the context for this node.
   _create_context(data) {
 
-    if (data.connection.reciever != context.getListener().id) {
+    if (data.connection.reciever != context.getListener().id &&
+      (context.getUser(data.connection.reciever).length == 0)) {
+
       context.addUser(data.connection.reciever);
       this._connectedContext();
+
     }
 
   }
 
   _bind_context(data) {
-    if (data.connection.reciever != context.getListener().id) {
+    if (data.connection.reciever != context.getListener().id &&
+      (context.getUser(data.connection.reciever).length == 0)) {
+
       context.addUser(data.connection.reciever);
+
     }
   }
 
